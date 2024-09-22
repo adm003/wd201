@@ -1,5 +1,10 @@
 const http = require("http");
 const fs = require("fs");
+const minimist = require("minimist"); // Add this line to include minimist
+
+// Read the port argument using minimist
+const args = minimist(process.argv.slice(2));
+const port = args.port || 3000; // Default to port 3000 if no port is provided
 
 let homeContent = "";
 let projectContent = "";
@@ -29,26 +34,26 @@ fs.readFile("registration.html", (err, registration) => {
     registrationContent = registration;
 });
 
-// Create an HTTP server
+// Create the HTTP server
 http.createServer((request, response) => {
-    let url = request.url; // Get the requested URL
-    response.writeHeader(200, { "Content-Type": "text/html" });
+    const url = request.url; // Get the requested URL
+    response.writeHead(200, { "Content-Type": "text/html" });
 
-    // Serve different content based on the URL route
+    // Serve content based on the URL route
     switch (url) {
         case "/project":
             response.write(projectContent);
             response.end();
             break;
         case "/registration":
-            response.write(registrationContent); // Serve the registration page
+            response.write(registrationContent);
             response.end();
             break;
         default:
-            response.write(homeContent); // Serve home page by default
+            response.write(homeContent);
             response.end();
             break;
     }
-}).listen(3000, () => {
-    console.log("Server is listening on port 3000");
+}).listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
 });
