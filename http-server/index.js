@@ -1,41 +1,54 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-const minimist = require('minimist');
+const http = require("http");
+const fs = require("fs");
 
-// Parse the port argument from the command line
-const args = minimist(process.argv.slice(2));
-const port = args.port || 3000;  // Default port 3000 if not supplied
+let homeContent = "";
+let projectContent = "";
+let registrationContent = "";
 
-// Helper function to serve HTML files
-function serveFile(response, filePath, contentType) {
-    fs.readFile(filePath, (err, content) => {
-        if (err) {
-            response.writeHead(500);
-            response.end(`Server error: ${err.code}`);
-        } else {
-            response.writeHead(200, { 'Content-Type': contentType });
-            response.end(content, 'utf-8');
-        }
-    });
-}
-
-// Create the server
-const server = http.createServer((req, res) => {
-    if (req.url === '/') {
-        serveFile(res, path.join(__dirname, 'home.html'), 'text/html');
-    } else if (req.url === '/projects') {
-        serveFile(res, path.join(__dirname, 'project.html'), 'text/html');
-    } else if (req.url === '/registration') {
-        // Serve registration.html when visiting /registration
-        serveFile(res, path.join(__dirname, 'registration.html'), 'text/html');
-    } else {
-        res.writeHead(404);
-        res.end('404: Not Found');
+// Read the home.html file
+fs.readFile("home.html", (err, home) => {
+    if (err) {
+        throw err;
     }
+    homeContent = home;
 });
 
-// Listen on the provided port number
-server.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
+// Read the project.html file
+fs.readFile("project.html", (err, project) => {
+    if (err) {
+        throw err;
+    }
+    projectContent = project;
+});
+
+// Read the registration.html file
+fs.readFile("registration.html", (err, registration) => {
+    if (err) {
+        throw err;
+    }
+    registrationContent = registration;
+});
+
+// Create an HTTP server
+http.createServer((request, response) => {
+    let url = request.url; // Get the requested URL
+    response.writeHeader(200, { "Content-Type": "text/html" });
+
+    // Serve different content based on the URL route
+    switch (url) {
+        case "/project":
+            response.write(projectContent);
+            response.end();
+            break;
+        case "/registration":
+            response.write(registrationContent); // Serve the registration page
+            response.end();
+            break;
+        default:
+            response.write(homeContent); // Serve home page by default
+            response.end();
+            break;
+    }
+}).listen(3000, () => {
+    console.log("Server is listening on port 3000");
 });
