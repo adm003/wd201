@@ -1,19 +1,41 @@
-const express = require('express');
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
 const minimist = require('minimist');
 
-const app = express();
-const port = minimist(process.argv).port || 5000; // Use the provided port or default to 5000
+// Parse the port argument from the command line
+const args = minimist(process.argv.slice(2));
+const port = args.port || 3000;  // Default port 3000 if not supplied
 
-app.use(express.static('http-server'));
+// Helper function to serve HTML files
+function serveFile(response, filePath, contentType) {
+    fs.readFile(filePath, (err, content) => {
+        if (err) {
+            response.writeHead(500);
+            response.end(`Server error: ${err.code}`);
+        } else {
+            response.writeHead(200, { 'Content-Type': contentType });
+            response.end(content, 'utf-8');
+        }
+    });
+}
 
-app.get('/', (req, res) => {
-    res.sendFile('home.html', { root: 'http-server' });
+// Create the server
+const server = http.createServer((req, res) => {
+    if (req.url === '/') {
+        serveFile(res, path.join(__dirname, 'home.html'), 'text/html');
+    } else if (req.url === '/projects') {
+        serveFile(res, path.join(__dirname, 'project.html'), 'text/html');
+    } else if (req.url === '/registration') {
+        // Serve registration.html when visiting /registration
+        serveFile(res, path.join(__dirname, 'registration.html'), 'text/html');
+    } else {
+        res.writeHead(404);
+        res.end('404: Not Found');
+    }
 });
 
-app.get('/registration', (req, res) => {
-    res.sendFile('registration.html', { root: 'http-server' });
-});
-
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+// Listen on the provided port number
+server.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/`);
 });

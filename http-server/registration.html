@@ -1,58 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        form {
+            display: block;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            width: 300px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 500px;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-    <h1>Registration Form</h1>
-    <form id="registrationForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" required><br><br>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" required><br><br>
+    <div class="container">
+        <form id="registrationForm">
+            <h2>Registration Form</h2>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" required>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">Accept Terms & Conditions</label>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" required><br><br>
+        <table id="entriesTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Dob</th>
+                    <th>Accepted terms?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Entries will be added here -->
+            </tbody>
+        </table>
+    </div>
 
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" required><br><br>
-
-        <label for="terms">Accepted terms:</label>
-        <input type="checkbox" id="terms" required><br><br>
-
-        <button type="submit" onclick="return validateDateOfBirth();">Submit</button>
-    </form>
-
-    <table id="registrationTable">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Password</th>
-                <th>Dob</th>
-                <th>Accepted terms?</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-
-    <script>
-        function validateDateOfBirth() {
-            const dobInput = document.getElementById('dob');
-            const dob = new Date(dobInput.value);
-            const today = new Date();
-            const age = today.getFullYear() - dob.getFullYear();
-
-            if (age < 18 || age > 55) {
-                alert('Please enter a date of birth between 18 and 55 years old.');
-                dobInput.value = '';
-                return false;
-            }
-
-            return true;
-        }
-    </script>
+    <script src="index.js"></script>
 </body>
 </html>
